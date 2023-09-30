@@ -27,23 +27,23 @@ jobs:
       - name: Build firmware
         run: ./build.sh
 
+      - name: Upload to Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.BUILD_PROFILE }}
+          path: openwrt/bin
+
       #- name: Set environment variable
       #  run: echo "CURRENT_BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
 
       # will be replaced with one of the:
       #   https://github.com/softprops/action-gh-release
       #   https://github.com/github-release/github-release
-      #- name: Upload to Releases
-      #  if: github.event_name == 'push'
-      #  uses: ncipollo/release-action@v1
-      #  with:
-      #    tag: ${{ env.CURRENT_BRANCH }}
-      #    allowUpdates: true
-      #    artifacts: ${{ env.BUILD_PROFILE }}.tar.gz
-      #    token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload to Artifact
-        uses: actions/upload-artifact@v3
+      - name: Upload to Releases
+        if: github.event_name == 'push'
+        uses: ncipollo/release-action@v1
         with:
-          name: ${{ env.BUILD_PROFILE }}
-          path: openwrt/bin
+          tag: ${{ env.GITHUB_REF_NAME }}
+          allowUpdates: true
+          artifacts: ${{ env.BUILD_PROFILE }}.tar.gz
+          token: ${{ secrets.GITHUB_TOKEN }}
