@@ -54,6 +54,7 @@ jobs:
         with:
           path: |
             ~/.ccache
+            dl
           key: ${{ runner.os }}-${{ github.ref_name }}-${{ env.BUILD_PROFILE }}-${{ github.sha }}
           restore-keys: ${{ runner.os }}-${{ github.ref_name }}-${{ env.BUILD_PROFILE }}-
 

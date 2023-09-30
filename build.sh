@@ -1,6 +1,22 @@
 #!/bin/sh
 # shellcheck disable=SC3043,SC2086,SC2164,SC2103,SC2046
 
+restore_cache() {
+  local src_dir="dl"
+  local dst_dir="$BUILD_DIR/dl"
+  [ -d $src_dir ] || return 0
+  [ -d $dst_dir ] || mkdir -p $dst_dir
+  mv ${src_dir}/* $dst_dir
+}
+
+save_cache() {
+  local src_dir="$BUILD_DIR/dl"
+  local dst_dir="dl"
+  [ -d $src_dir ] || return 0
+  [ -d $dst_dir ] || mkdir -p $dst_dir
+  mv ${src_dir}/* $dst_dir
+}
+
 get_sources() {
   local repo_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY_OWNER}/openwrt-ipq60xx.git"
   local branch="$GITHUB_REF_NAME"
@@ -26,5 +42,7 @@ package_binaries() {
 }
 
 get_sources
+restore_cache
 build_firmware
+save_cache
 package_binaries
