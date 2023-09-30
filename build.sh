@@ -25,13 +25,6 @@ package_binaries() {
   tar -zcvf $tarball -C $bin_dir $(ls $bin_dir -1)
 }
 
-package_depends() {
-  local dl_dir="openwrt/dl"
-  local tarball="openwrt-19.07-depends-20230930.tar.gz"
-  tar -zcvf $tarball -C $dl_dir $(ls $dl_dir -1)
-}
-
 get_sources
 build_firmware
 package_binaries
-package_depends

@@ -39,15 +39,3 @@ jobs:
         with:
           tag_name: ${{ github.ref_name }}
           files: ${{ env.BUILD_PROFILE }}.tar.gz
-
-      - name: Backup depends to Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: openwrt-19.07-depends-20230930
-          path: openwrt/dl
-
-      - name: Backup depends to Releases
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: depends
-          files: openwrt-19.07-depends-20230930.tar.gz
