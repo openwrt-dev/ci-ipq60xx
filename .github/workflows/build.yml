@@ -33,17 +33,9 @@ jobs:
           name: ${{ env.BUILD_PROFILE }}
           path: openwrt/bin
 
-      #- name: Set environment variable
-      #  run: echo "CURRENT_BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
-
-      # will be replaced with one of the:
-      #   https://github.com/softprops/action-gh-release
-      #   https://github.com/github-release/github-release
       - name: Upload to Releases
         if: github.event_name == 'push'
-        uses: ncipollo/release-action@v1
+        uses: softprops/action-gh-release@v1
         with:
-          tag: ${{ env.GITHUB_REF_NAME }}
-          allowUpdates: true
-          artifacts: ${{ env.BUILD_PROFILE }}.tar.gz
-          token: ${{ secrets.GITHUB_TOKEN }}
+          tag_name: ${{ github.ref_name }}
+          files: ${{ env.BUILD_PROFILE }}.tar.gz
