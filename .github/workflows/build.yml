@@ -44,7 +44,7 @@ jobs:
           download_docker_binary
           sudo docker image prune -af
 
-      - name: Checkout
+      - name: Checkout sources
         uses: actions/checkout@v3
         with:
           submodules: true
