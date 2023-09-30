@@ -9,6 +9,11 @@ jobs:
     runs-on: ubuntu-22.04
     container:
       image: pexcn/docker-images:buster-openwrt
+      volumes:
+        - /usr/local/lib/android:/usr/local/lib/android
+        - /usr/share/dotnet:/usr/share/dotnet
+        - /opt/ghc:/opt/ghc
+        - /opt/hostedtoolcache/CodeQL:/opt/hostedtoolcache/CodeQL
     env:
       TZ: Asia/Taipei
       BUILD_PROFILE: ${{ matrix.PROFILE }}
@@ -19,6 +24,13 @@ jobs:
           - ipq60xx-generic
   
     steps:
+      - name: Maximize build space
+        run: |
+          sudo find /usr/local/lib/android -mindepth 1 -delete
+          sudo find /usr/share/dotnet -mindepth 1 -delete
+          sudo find /opt/ghc -mindepth 1 -delete
+          sudo find /opt/hostedtoolcache/CodeQL -mindepth 1 -delete
+
       - name: Checkout
         uses: actions/checkout@v3
         with:
