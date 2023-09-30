@@ -1,0 +1,49 @@
+name: Build
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    container:
+      image: pexcn/docker-images:buster-openwrt
+    env:
+      TZ: Asia/Taipei
+      BUILD_PROFILE: ${{ matrix.PROFILE }}
+    strategy:
+      fail-fast: false
+      matrix:
+        PROFILE:
+          - ipq60xx-generic
+  
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - name: Build firmware
+        run: ./build.sh
+
+      #- name: Set environment variable
+      #  run: echo "CURRENT_BRANCH=${GITHUB_REF##*/}" >> $GITHUB_ENV
+
+      # will be replaced with one of the:
+      #   https://github.com/softprops/action-gh-release
+      #   https://github.com/github-release/github-release
+      #- name: Upload to Releases
+      #  if: github.event_name == 'push'
+      #  uses: ncipollo/release-action@v1
+      #  with:
+      #    tag: ${{ env.CURRENT_BRANCH }}
+      #    allowUpdates: true
+      #    artifacts: ${{ env.BUILD_PROFILE }}.tar.gz
+      #    token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload to Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ env.BUILD_PROFILE }}
+          path: openwrt/bin
