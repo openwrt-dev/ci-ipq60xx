@@ -14,6 +14,7 @@ jobs:
         - /usr/share/dotnet:/usr/share/dotnet
         - /opt/ghc:/opt/ghc
         - /opt/hostedtoolcache/CodeQL:/opt/hostedtoolcache/CodeQL
+        - /var/run/docker.sock:/var/run/docker.sock
     env:
       TZ: Asia/Taipei
       BUILD_PROFILE: ${{ matrix.PROFILE }}
@@ -26,10 +27,21 @@ jobs:
     steps:
       - name: Maximize build space
         run: |
+          # remove unnecessary software
           sudo find /usr/local/lib/android -mindepth 1 -delete
           sudo find /usr/share/dotnet -mindepth 1 -delete
           sudo find /opt/ghc -mindepth 1 -delete
           sudo find /opt/hostedtoolcache/CodeQL -mindepth 1 -delete
+          # remove docker images
+          download_docker_binary() {
+            local docker_version="24.0.6"
+            local arch="x86_64"
+            [ "$(dpkg --print-architecture)" = "amd64" ] || arch="aarch64"
+            curl https://download.docker.com/linux/static/stable/${arch}/docker-${docker_version}.tgz | \
+              sudo tar zxv -C /usr/local/bin/ docker/docker --strip-components 1
+          }
+          download_docker_binary
+          sudo docker image prune -af
 
       - name: Checkout
         uses: actions/checkout@v3
