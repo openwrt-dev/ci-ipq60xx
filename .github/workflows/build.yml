@@ -17,6 +17,7 @@ jobs:
         - /var/run/docker.sock:/var/run/docker.sock
     env:
       TZ: Asia/Taipei
+      BUILD_DIR: openwrt-ipq60xx
       BUILD_PROFILE: ${{ matrix.PROFILE }}
     strategy:
       fail-fast: false
@@ -53,7 +54,7 @@ jobs:
         with:
           path: |
             ~/.ccache
-            openwrt/dl
+            ${{ env.BUILD_DIR }}/dl
           key: ${{ runner.os }}-${{ github.ref_name }}-${{ env.BUILD_PROFILE }}-${{ github.sha }}
           restore-keys: ${{ runner.os }}-${{ github.ref_name }}-${{ env.BUILD_PROFILE }}-
 
@@ -64,7 +65,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: ${{ env.BUILD_PROFILE }}
-          path: openwrt/bin
+          path: ${{ env.BUILD_DIR }}/bin
 
       - name: Upload to Releases
         if: github.event_name == 'push' && startsWith(github.event.head_commit.message, '[release] ')

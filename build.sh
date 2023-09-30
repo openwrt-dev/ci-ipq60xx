@@ -4,11 +4,11 @@
 get_sources() {
   local repo_url="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY_OWNER}/openwrt-ipq60xx.git"
   local branch="$GITHUB_REF_NAME"
-  git clone $repo_url --single-branch -b $branch openwrt
+  git clone $repo_url --single-branch -b $branch $BUILD_DIR
 }
 
 build_firmware() {
-  cd openwrt
+  cd $BUILD_DIR
 
   ./scripts/feeds update -a
   ./scripts/feeds install -a
@@ -20,7 +20,7 @@ build_firmware() {
 }
 
 package_binaries() {
-  local bin_dir="openwrt/bin"
+  local bin_dir="${BUILD_DIR}/bin"
   local tarball="${BUILD_PROFILE}.tar.gz"
   tar -zcvf $tarball -C $bin_dir $(ls $bin_dir -1)
 }
