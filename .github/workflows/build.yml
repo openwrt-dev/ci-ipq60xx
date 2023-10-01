@@ -3,6 +3,11 @@ name: Build
 on:
   push:
   workflow_dispatch:
+    inputs:
+      upload_release:
+        description: 'Whether to upload binaries to releases'
+        required: true
+        default: '0'
 
 jobs:
   build:
@@ -68,7 +73,7 @@ jobs:
           path: ${{ env.BUILD_DIR }}/bin
 
       - name: Upload to Releases
-        if: github.event_name == 'push' && startsWith(github.event.head_commit.message, '[release] ')
+        if: (github.event_name == 'push' && startsWith(github.event.head_commit.message, '[release] ')) || (github.event.inputs.upload_release == 1)
         uses: softprops/action-gh-release@v1
         with:
           tag_name: ${{ github.ref_name }}
