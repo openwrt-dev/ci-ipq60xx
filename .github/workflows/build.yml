@@ -67,7 +67,12 @@ jobs:
         run: ./build.sh
 
       - name: Show OpenWrt Version
-        run: cd $BUILD_DIR && git log -1
+        run: |
+          echo "=============== Configs Version ==============="
+          cd configs && git log -1 && cd -
+          echo
+          echo "=============== OpenWrt Version ==============="
+          cd $BUILD_DIR && git log -1 && cd -
 
       - name: Upload to Artifact
         uses: actions/upload-artifact@v3
